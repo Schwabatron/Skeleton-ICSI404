@@ -74,6 +74,19 @@ class BitTest {
         Bit result = new Bit(true);
         Assertions.assertEquals("t",result.toString());
         Bit f = new Bit(false);
-        Assertions.assertEquals("f",result.toString());
+        Assertions.assertEquals("f",f.toString());
+    }
+
+
+    /*
+        test for the getvalue and assign methods of the bit class
+        written by Jack Schwabe
+    */
+    @org.junit.jupiter.api.Test
+    void test_get_value_and_Assign() {
+        Bit test = new Bit(true);
+        Assertions.assertEquals(Bit.boolValues.TRUE,test.getValue());
+        test.assign(Bit.boolValues.FALSE);
+        Assertions.assertEquals(Bit.boolValues.FALSE,test.getValue());
     }
 }
