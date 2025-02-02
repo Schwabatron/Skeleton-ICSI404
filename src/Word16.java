@@ -2,8 +2,6 @@ public class Word16 {
     private static final int size = 16;
     private final Bit[] Word;
 
-
-
     public Word16() {
         this.Word = new Bit[size];
         for(int i = 0; i < size; i++)
@@ -11,8 +9,6 @@ public class Word16 {
             this.Word[i] = new Bit(false);
         }
     }
-
-
 
     public Word16(Bit[] in) {
         this.Word = new Bit[size];
@@ -23,7 +19,7 @@ public class Word16 {
         }
     }
 
-    public void copy(Word16 result) {// sets the values in "result" to be the same as the values in this instance; use "bit.assign"
+    public void copy(Word16 result) { // sets the values in "result" to be the same as the values in this instance; use "bit.assign"
         for (int i = 0; i < size; i++)
         {
 
@@ -31,20 +27,19 @@ public class Word16 {
         }
     }
 
-    public void setBitN(int n, Bit source) {// sets the nth bit of this word to "source"
+    public void setBitN(int n, Bit source) { // sets the nth bit of this word to "source"
         this.Word[n] = source;
     }
 
-    public void getBitN(int n, Bit result) { // sets result to be the same value as the nth bit of this word
+    public void getBitN(int n, Bit result) { //sets result to be the same value as the nth bit of this word
         result.assign(this.Word[n].getValue());
     }
 
-    public boolean equals(Word16 other) {// is other equal to this
+    public boolean equals(Word16 other) { // is other equal to this
         return equals(this, other);
     }
 
     public static boolean equals(Word16 a, Word16 b) {
-
         for(int i = 0; i < size; i++)
         {
             if(a.Word[i].getValue() != b.Word[i].getValue())
