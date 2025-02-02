@@ -41,8 +41,8 @@ public class Bit {
     }
 
     public void and(Bit b2, Bit result) {
-       Bit new_bit = new Bit(single_bit == boolValues.TRUE);
-       and(new_bit, b2, result);
+       //Bit new_bit = new Bit(single_bit == boolValues.TRUE);
+       and(this, b2, result);
     }
 
 
@@ -57,8 +57,8 @@ public class Bit {
     }
 
     public void or(Bit b2, Bit result) {
-        Bit new_bit = new Bit(single_bit == boolValues.TRUE);
-        or(new_bit, b2, result);
+        //Bit new_bit = new Bit(single_bit == boolValues.TRUE);
+        or(this, b2, result);
     }
 
     public static void or(Bit b1, Bit b2, Bit result) {
@@ -72,8 +72,8 @@ public class Bit {
     }
 
     public void xor(Bit b2, Bit result) {
-        Bit new_bit = new Bit(single_bit == boolValues.TRUE);
-        xor(new_bit, b2, result);
+        //Bit new_bit = new Bit(single_bit == boolValues.TRUE);
+        xor(this, b2, result);
     }
 
     public static void xor(Bit b1, Bit b2, Bit result) {
@@ -97,8 +97,8 @@ public class Bit {
     }
 
     public void not(Bit result) {
-        Bit new_bit = new Bit(single_bit == boolValues.TRUE);
-        not(new_bit, result);
+        //Bit new_bit = new Bit(single_bit == boolValues.TRUE);
+        not(this, result);
     }
 
 
