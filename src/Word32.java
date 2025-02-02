@@ -13,10 +13,7 @@ public class Word32 {
     public Word32(Bit[] in) {
         this.Word = new Bit[size];
 
-        for(int i = 0; i < size; i++)
-        {
-            this.Word[i] = in[i];
-        }
+        System.arraycopy(in, 0, this.Word, 0, size);
     }
 
     public void getTopHalf(Word16 result) {// sets result = bits 0-15 of this word. use bit.assign
