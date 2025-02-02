@@ -109,4 +109,16 @@ class Word16Test {
         sw2.not(result);
         assertTrue(sw.equals(result));
     }
+
+
+    //Copy test by Jack Schwabe
+    @Test
+    void copy_test() {
+        Word16 w = getStripe();
+        var result = new Word16();
+        w.copy(result);
+        System.out.println(w);
+        System.out.println(result);
+        assertTrue(w.equals(result));
+    }
 }
