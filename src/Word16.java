@@ -11,7 +11,12 @@ public class Word16 {
 
     public Word16(Bit[] in) {
         this.Word = new Bit[size];
-        System.arraycopy(in, 0, this.Word, 0, size);
+        for(int i = 0; i < size; i++) { //init
+            this.Word[i] = new Bit(false);
+        }
+        for(int i = 0; i < size; i++) {
+            this.Word[i].assign(in[i].getValue());
+        }
     }
 
     public void copy(Word16 result) { // sets the values in "result" to be the same as the values in this instance; use "bit.assign"
