@@ -65,11 +65,13 @@ public class Bit {
      * @param result The {@code Bit} where the result will be stored.
      */
     public static void and(Bit b1, Bit b2, Bit result) {
-        if((b1.getValue() == boolValues.TRUE) && (b2.getValue() == boolValues.TRUE)) {
-            result.assign(boolValues.TRUE);
+        if(b1.getValue() == boolValues.FALSE)
+        {
+            result.single_bit = boolValues.FALSE;
         }
-        else {
-            result.assign(boolValues.FALSE);
+        else if(b2.getValue() == boolValues.TRUE)
+        {
+            result.single_bit = boolValues.TRUE;
         }
     }
 
@@ -85,12 +87,18 @@ public class Bit {
      * @param result The {@code Bit} where the result will be stored.
      */
     public static void or(Bit b1, Bit b2, Bit result) {
-        if((b1.getValue() == boolValues.TRUE) || (b2.getValue() == boolValues.TRUE)) {
-            result.assign(boolValues.TRUE);
-        }
-        else {
-            result.assign(boolValues.FALSE);
-        }
+       if(b1.getValue() == boolValues.TRUE)
+       {
+           result.single_bit = boolValues.TRUE;
+       }
+       else if(b2.getValue() == boolValues.TRUE)
+       {
+           result.single_bit = boolValues.TRUE;
+       }
+       else
+       {
+           result.single_bit = boolValues.FALSE;
+       }
     }
 
     public void xor(Bit b2, Bit result) {
@@ -105,12 +113,25 @@ public class Bit {
      * @param result The {@code Bit} where the result will be stored.
      */
     public static void xor(Bit b1, Bit b2, Bit result) {
-        if(((b1.getValue() == boolValues.TRUE) || (b2.getValue() == boolValues.TRUE)) && (b1.getValue() != b2.getValue())) {
-            result.assign(boolValues.TRUE);
-        }
-        else {
-            result.assign(boolValues.FALSE);
-        }
+       if(b1.getValue() == boolValues.TRUE)
+       {
+           if(b2.getValue() == boolValues.TRUE)
+           {
+               result.single_bit = boolValues.FALSE;
+           }
+           else if(b2.getValue() == boolValues.FALSE)
+           {
+               result.single_bit = boolValues.TRUE;
+           }
+       }
+       else if(b2.getValue() == boolValues.TRUE)
+       {
+           result.single_bit = boolValues.TRUE;
+       }
+       else
+       {
+           result.single_bit = boolValues.FALSE;
+       }
     }
 
     public void not(Bit result) {
