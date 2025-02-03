@@ -15,8 +15,6 @@ public class Bit {
      */
     private boolValues single_bit;
 
-
-
     /**
      * Constructor for the {@code Bit} class.
      * Takes a bool parameter and initializes the bit value depending on the value.
@@ -101,8 +99,6 @@ public class Bit {
 
     /**
      * Performs an XOR operation between two bits and stores the result in a third bit.
-     *
-     *
      *
      * @param b1 The first {@code Bit} operand.
      * @param b2 The second {@code Bit} operand.
