@@ -4,22 +4,18 @@ public class Word16 {
 
     public Word16() {
         this.Word = new Bit[size];
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             this.Word[i] = new Bit(false);
         }
     }
 
     public Word16(Bit[] in) {
         this.Word = new Bit[size];
-
         System.arraycopy(in, 0, this.Word, 0, size);
     }
 
     public void copy(Word16 result) { // sets the values in "result" to be the same as the values in this instance; use "bit.assign"
-        for (int i = 0; i < size; i++)
-        {
-
+        for (int i = 0; i < size; i++) {
             result.Word[i].assign(this.Word[i].getValue());
         }
     }
@@ -37,10 +33,8 @@ public class Word16 {
     }
 
     public static boolean equals(Word16 a, Word16 b) {
-        for(int i = 0; i < size; i++)
-        {
-            if(a.Word[i].getValue() != b.Word[i].getValue())
-            {
+        for(int i = 0; i < size; i++) {
+            if(a.Word[i].getValue() != b.Word[i].getValue()) {
                 return false;
             }
         }
@@ -52,8 +46,7 @@ public class Word16 {
     }
 
     public static void and(Word16 a, Word16 b, Word16 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].and(b.Word[i], result.Word[i]);
         }
     }
@@ -63,8 +56,7 @@ public class Word16 {
     }
 
     public static void or(Word16 a, Word16 b, Word16 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].or(b.Word[i], result.Word[i]);
         }
     }
@@ -74,8 +66,7 @@ public class Word16 {
     }
 
     public static void xor(Word16 a, Word16 b, Word16 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].xor(b.Word[i], result.Word[i]);
         }
     }
@@ -85,20 +76,17 @@ public class Word16 {
     }
 
     public static void not(Word16 a, Word16 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].not(result.Word[i]);
         }
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
         for (Bit bit : Word) {
             sb.append(bit.toString());
             sb.append(",");
         }
-
         return sb.toString();
     }
 }

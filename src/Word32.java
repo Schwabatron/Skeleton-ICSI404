@@ -4,37 +4,32 @@ public class Word32 {
 
     public Word32() {
         this.Word = new Bit[size];
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             this.Word[i] = new Bit(false);
         }
     }
 
     public Word32(Bit[] in) {
         this.Word = new Bit[size];
-
         System.arraycopy(in, 0, this.Word, 0, size);
     }
 
     public void getTopHalf(Word16 result) {// sets result = bits 0-15 of this word. use bit.assign
-        for(int i = 0; i < size/2; i++)
-        {
+        for(int i = 0; i < size/2; i++) {
             result.setBitN(i, this.Word[i]);
         }
     }
 
     public void getBottomHalf(Word16 result) { // sets result = bits 16-31 of this word. use bit.assign
-        for(int i = 0; i < size/2; i++)
-        {
+        for(int i = 0; i < size/2; i++) {
             result.setBitN(i, this.Word[i+16]);
         }
     }
 
-    public void copy(Word32 result) {
-        for (int i = 0; i < size; i++)
-        {
+    public void copy(Word32 result) { // sets result's bit to be the same as this. use bit.assign
+        for (int i = 0; i < size; i++) {
             result.Word[i].assign(this.Word[i].getValue());
-        }// sets result's bit to be the same as this. use bit.assign
+        }
     }
 
     public boolean equals(Word32 other) {
@@ -42,10 +37,8 @@ public class Word32 {
     }
 
     public static boolean equals(Word32 a, Word32 b) {
-        for(int i = 0; i < size; i++)
-        {
-            if(a.Word[i].getValue() != b.Word[i].getValue())
-            {
+        for(int i = 0; i < size; i++) {
+            if(a.Word[i].getValue() != b.Word[i].getValue()) {
                 return false;
             }
         }
@@ -65,8 +58,7 @@ public class Word32 {
     }
 
     public static void and(Word32 a, Word32 b, Word32 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].and(b.Word[i], result.Word[i]);
         }
     }
@@ -76,8 +68,7 @@ public class Word32 {
     }
 
     public static void or(Word32 a, Word32 b, Word32 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].or(b.Word[i], result.Word[i]);
         }
     }
@@ -87,8 +78,7 @@ public class Word32 {
     }
 
     public static void xor(Word32 a, Word32 b, Word32 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].xor(b.Word[i], result.Word[i]);
         }
     }
@@ -98,20 +88,17 @@ public class Word32 {
     }
 
     public static void not(Word32 a, Word32 result) {
-        for(int i = 0; i < size; i++)
-        {
+        for(int i = 0; i < size; i++) {
             a.Word[i].not(result.Word[i]);
         }
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
         for (Bit bit : Word) {
             sb.append(bit.toString());
             sb.append(",");
         }
-
         return sb.toString();
     }
 }

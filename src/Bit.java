@@ -49,8 +49,7 @@ public class Bit {
         if((b1.getValue() == boolValues.TRUE) && (b2.getValue() == boolValues.TRUE)) {
             result.assign(boolValues.TRUE);
         }
-        else
-        {
+        else {
             result.assign(boolValues.FALSE);
         }
     }
@@ -63,8 +62,7 @@ public class Bit {
         if((b1.getValue() == boolValues.TRUE) || (b2.getValue() == boolValues.TRUE)) {
             result.assign(boolValues.TRUE);
         }
-        else
-        {
+        else {
             result.assign(boolValues.FALSE);
         }
     }
@@ -77,8 +75,7 @@ public class Bit {
         if(((b1.getValue() == boolValues.TRUE) || (b2.getValue() == boolValues.TRUE)) && (b1.getValue() != b2.getValue())) {
             result.assign(boolValues.TRUE);
         }
-        else
-        {
+        else {
             result.assign(boolValues.FALSE);
         }
     }
@@ -87,8 +84,7 @@ public class Bit {
         if(b2.getValue() == boolValues.FALSE) {
             result.assign(boolValues.TRUE);
         }
-        else
-        {
+        else {
             result.assign(boolValues.FALSE);
         }
     }
