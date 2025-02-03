@@ -116,10 +116,9 @@ class Word16Test {
     void copy_test() {
         Word16 w = getStripe();
         Word16 w2 = new Word16(new Bit[]{ t, t, f, f, t, t, f, f, t, t, f, f, t, t, f, f });
-        var result = new Word16();
         w.copy(w2);
-        System.out.println(w.toString());
-        System.out.println(w2.toString());
+        System.out.println(w);
+        System.out.println(w2);
         assertTrue(w.equals(w2));
     }
 }
