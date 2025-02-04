@@ -1,7 +1,11 @@
-public class Word32 {
-    private static final int size = 32;
-    private final Bit[] Word;
 
+public class Word32 {
+
+    private static final int size = 32; //the size of the Word32 bit array
+
+    private final Bit[] Word; //Word array to hold the bits
+
+    //Constructor that initializes all the values to false
     public Word32() {
         this.Word = new Bit[size];
         for(int i = 0; i < size; i++) {
@@ -9,15 +13,14 @@ public class Word32 {
         }
     }
 
+    //Constructor that takes a parameter and copies the values to the current instance of Word32
     public Word32(Bit[] in) {
         this.Word = new Bit[size];
-        for(int i = 0; i < size; i++) { //init
-            this.Word[i] = new Bit(false);
-        }
         for(int i = 0; i < size; i++) {
-            this.Word[i].assign(in[i].getValue());
+            this.Word[i] = new Bit(in[i].getValue() == Bit.boolValues.TRUE);
         }
     }
+
 
     public void getTopHalf(Word16 result) {// sets result = bits 0-15 of this word. use bit.assign
         for(int i = 0; i < size/2; i++) {
@@ -37,6 +40,7 @@ public class Word32 {
         }
     }
 
+    //Checks if two Word32 objects are equal
     public boolean equals(Word32 other) {
         return equals(this, other);
     }
@@ -50,14 +54,17 @@ public class Word32 {
         return true;
     }
 
+    //Assigns the value at the nth index to result
     public void getBitN(int n, Bit result) {// use bit.assign
         result.assign(this.Word[n].getValue());
     }
 
+    //Sets the bit at the nth index to the value held in source
     public void setBitN(int n, Bit source) { //  use bit.assign
-        this.Word[n] = source;
+        this.Word[n] = new Bit(source.getValue() == Bit.boolValues.TRUE);
     }
 
+    //and operation
     public void and(Word32 other, Word32 result) {
         and(this, other, result);
     }
@@ -68,6 +75,7 @@ public class Word32 {
         }
     }
 
+    //or operation
     public void or(Word32 other, Word32 result) {
         or(this, other, result);
     }
@@ -78,6 +86,7 @@ public class Word32 {
         }
     }
 
+    //exclusive or operation
     public void xor(Word32 other, Word32 result) {
         xor(this, other, result);
     }
@@ -88,6 +97,7 @@ public class Word32 {
         }
     }
 
+    //not operation
     public void not( Word32 result) {
         not(this, result);
     }
@@ -98,6 +108,7 @@ public class Word32 {
         }
     }
 
+    //ToString method for the Word32 class
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Bit bit : Word) {
