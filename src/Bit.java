@@ -1,83 +1,93 @@
+
 public class Bit {
-    public enum boolValues { FALSE, TRUE }
 
-    private boolValues single_bit;//Private member representing the bit we are working with
+    public enum boolValues { FALSE, TRUE } //enum to keep track of the boolean value associated with a Bit
 
+    private boolValues single_bit; // private value to store the current value held by the current bit instance
 
-
-    /*
-    Constructor for the Bit class
-    Parameters: Boolean value
-    Using the parameter value the constructor will check the boolean value
-    if the boolean value is true the bit will be assigned to TRUE in the boolValues enum
-    if the boolean value is false the bit will be assigned to FALSE in the boolValues enum
-     */
+    //constructor that takes a boolean value
+    //true -> boolValues.TRUE
+    //false -> boolValues.FALSE
     public Bit(boolean value) {
-        if(value) { //If the value is true
-            this.single_bit = boolValues.TRUE; //The bit is TRUE
-        }
-        else {
-            this.single_bit = boolValues.FALSE; //If false the bit is FALSE
-        }
+        this.single_bit = value ? Bit.boolValues.TRUE : Bit.boolValues.FALSE;
     }
 
-    /*
-    getValue method
-    Parameters: N/A
-    the getValue method is a simple getter method that will simply return the enum contained
-    in the single_bit variable (either boolValues.TRUE or boolValues.FALSE)
-     */
+    //Gets the value of the current bit instance
     public boolValues getValue() {
         return single_bit;
     }
 
+    //Re-assigns the value of the current bit instance based on the Boolvalues input
     public void assign(boolValues value) {
-        if(value == boolValues.TRUE) { //If the value is true
-            single_bit = boolValues.TRUE; //The bit is TRUE
-        }
-        else {
-            single_bit = boolValues.FALSE; //If false the bit is FALSE
-        }
+        single_bit = value == boolValues.TRUE ? Bit.boolValues.TRUE : Bit.boolValues.FALSE;
     }
 
+    //And operation
     public void and(Bit b2, Bit result) {
        and(this, b2, result);
     }
 
-
     public static void and(Bit b1, Bit b2, Bit result) {
-        if((b1.getValue() == boolValues.TRUE) && (b2.getValue() == boolValues.TRUE)) {
-            result.assign(boolValues.TRUE);
+        if(b1.getValue() == boolValues.FALSE)
+        {
+            result.single_bit = boolValues.FALSE;
         }
-        else {
-            result.assign(boolValues.FALSE);
+        else if(b2.getValue() == boolValues.TRUE)
+        {
+            result.single_bit = boolValues.TRUE;
         }
     }
 
+    //or operation
     public void or(Bit b2, Bit result) {
         or(this, b2, result);
     }
 
     public static void or(Bit b1, Bit b2, Bit result) {
-        if((b1.getValue() == boolValues.TRUE) || (b2.getValue() == boolValues.TRUE)) {
-            result.assign(boolValues.TRUE);
-        }
-        else {
-            result.assign(boolValues.FALSE);
-        }
+       if(b1.getValue() == boolValues.TRUE)
+       {
+           result.single_bit = boolValues.TRUE;
+       }
+       else if(b2.getValue() == boolValues.TRUE)
+       {
+           result.single_bit = boolValues.TRUE;
+       }
+       else
+       {
+           result.single_bit = boolValues.FALSE;
+       }
     }
 
+    //exclusive or operation
     public void xor(Bit b2, Bit result) {
         xor(this, b2, result);
     }
 
     public static void xor(Bit b1, Bit b2, Bit result) {
-        if(((b1.getValue() == boolValues.TRUE) || (b2.getValue() == boolValues.TRUE)) && (b1.getValue() != b2.getValue())) {
-            result.assign(boolValues.TRUE);
-        }
-        else {
-            result.assign(boolValues.FALSE);
-        }
+       if(b1.getValue() == boolValues.TRUE)
+       {
+           if(b2.getValue() == boolValues.TRUE)
+           {
+               result.single_bit = boolValues.FALSE;
+           }
+           else if(b2.getValue() == boolValues.FALSE)
+           {
+               result.single_bit = boolValues.TRUE;
+           }
+       }
+       else if(b2.getValue() == boolValues.TRUE)
+       {
+           result.single_bit = boolValues.TRUE;
+       }
+       else
+       {
+           result.single_bit = boolValues.FALSE;
+       }
+    }
+
+    //not operation
+    public void not(Bit result) {
+        not(this, result);
     }
 
     public static void not(Bit b2, Bit result) {
@@ -89,18 +99,7 @@ public class Bit {
         }
     }
 
-    public void not(Bit result) {
-        not(this, result);
-    }
-
-
-    /*
-    Name: toString
-    Parameters: N/A
-    Takes the private member single_bit and uses a switch statement to see if its TRUE or FALSE
-    if it is TRUE then it returns a single lowercase "f"
-    if it is FALSE then it returns a single lowercase "t"
-     */
+    //ToString method for the Bit class
     public String toString() {
         switch(single_bit) {
             case FALSE -> {
