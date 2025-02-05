@@ -30,7 +30,7 @@ public class Word16 {
 
     //Sets the bit at the nth index to the value in source
     public void setBitN(int n, Bit source) { // sets the nth bit of this word to "source"
-        this.Word[n] = new Bit(source.getValue() == Bit.boolValues.TRUE);
+        this.Word[n].assign(source.getValue());
     }
 
     //Gets the bit at the nth index and assigns it to result

@@ -61,7 +61,7 @@ public class Word32 {
 
     //Sets the bit at the nth index to the value held in source
     public void setBitN(int n, Bit source) { //  use bit.assign
-        this.Word[n] = new Bit(source.getValue() == Bit.boolValues.TRUE);
+        this.Word[n].assign(source.getValue());
     }
 
     //and operation
