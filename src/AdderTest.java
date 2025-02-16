@@ -60,6 +60,24 @@ class AdderTest {
             }
         }
     }
+    @Test
+    void test_blocks() {
+        Word32 value = new Word32(new Bit[]{
+                f, t, f, t, f, t, f, t, f, t, f, t, f, f, t, t,
+                t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t
+        });
+        Word32 value2 = new Word32(new Bit[]{
+                f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f,
+                t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t
+        });
+
+        Adder.add(value, value2, value2);
+
+
+
+    }
+
+
 
     @Test
     void subtract() {
