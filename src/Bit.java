@@ -36,6 +36,10 @@ public class Bit {
         {
             result.single_bit = boolValues.TRUE;
         }
+        else
+        {
+            result.single_bit = boolValues.FALSE;
+        }
     }
 
     //or operation
