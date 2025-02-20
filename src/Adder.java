@@ -2,13 +2,13 @@ public class Adder {
 
     public static void subtract(Word32 a, Word32 b, Word32 result) {
         Word32 one = new Word32();
-        one.setBitN(31, new Bit(true));
+        one.setBitN(31, new Bit(true)); //making 1
 
         Word32 temp = new Word32();
-        b.not(temp);
+        b.not(temp); // not b
 
-        add(a, temp , result);
-        add(result, one, result);
+        add(a, temp , result); // adding a and not b
+        add(result, one, result); //adding 1
 
     }
 
