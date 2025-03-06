@@ -71,14 +71,14 @@ public class Memory {
             throw new IllegalArgumentException("Dram overflow error");
         }
 
-        for (int i = 0; i < data.length; i++) { //loop through the data array
-            if(data[i].length() !=32) //if the current string at i has a length not equal to 32 then throw error
+        for (String word: data) { //loop through the data array
+            if(word.length() !=32) //if the current string at i has a length not equal to 32 then throw error
             {
                 throw new IllegalArgumentException("data entries cannot be greater than 32 bits");
             }
-            for(int j=0; j <data[i].length(); j++) //looping through the string at index i
+            for(int j=0; j <word.length(); j++) //looping through the string at index i
             {
-                char ch = data[i].charAt(j);//getting the char at index j of the string at index i
+                char ch = word.charAt(j);//getting the char at index j of the string at index i
                 if(ch == 't')
                 {
                     dram[load_slot].setBitN(j, new Bit(true)); //change the memory located at index j of load_slot to match the data present in the data array
