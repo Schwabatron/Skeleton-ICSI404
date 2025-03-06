@@ -50,7 +50,7 @@ public class ALU {
             case 8 ->{}
             case 9 ->{}
             case 10 ->{}
-            case 11 ->{
+            case 11 ->{ //Compares Source to destination, setting the status register flags
                 Word32 temp_result = new Word32();
                 Adder.subtract(op1, op2, temp_result);
                 boolean isNegative = isNegative(temp_result);

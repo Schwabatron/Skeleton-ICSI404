@@ -71,7 +71,7 @@ public class Memory {
             throw new IllegalArgumentException("Dram overflow error");
         }
 
-        for (String word: data) { //loop through the data array
+        for (String word : data) { //loop through the data array
             if(word.length() !=32) //if the current string at i has a length not equal to 32 then throw error
             {
                 throw new IllegalArgumentException("data entries cannot be greater than 32 bits");
@@ -89,7 +89,7 @@ public class Memory {
                 }
                 else
                 {
-                    throw new IllegalArgumentException("cannot use a value other than t or f");
+                    throw new IllegalArgumentException("cannot use a value other than t or f when loading dram");
                 }
             }
             load_slot++; //incrementing the slot
