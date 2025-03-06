@@ -1,7 +1,6 @@
 public class Memory {
     public Word32 address= new Word32();
     public Word32 value = new Word32();
-    private int load_slot = 0;
 
 
     //1000 slot array holding type Word32()
@@ -66,6 +65,8 @@ public class Memory {
 
     //load data inserts word32 objects into the dram starting from 0 and incrementing from there
     public void load(String[] data) { //array of strings in the format (["ttff...", "ttffft...", and so on])
+        int load_slot = 0; //making sure we start from the first index
+
         if(data.length > 1000) //if the data being added is greater than the size of dram
         {
             throw new IllegalArgumentException("Dram overflow error");

@@ -1,10 +1,8 @@
 public class ALU {
 
-    //TODO: deconstruct the instruction into the OPCODE, format (2R vs immediate) , source register/signed immediate value, and destination register
-
     public Word16 instruction = new Word16(); //holds the instructions
-    public Word32 op1 = new Word32(); //first operand of the operation (for now assume destination)
-    public Word32 op2 = new Word32(); //second operand of the operation (for now assume source )
+    public Word32 op1 = new Word32(); //first operand of the operation (assume destination)
+    public Word32 op2 = new Word32(); //second operand of the operation (assume source )
 
     public Word32 result = new Word32(); //area to store the computed result before putting it back in the destination register
     public Bit less = new Bit(false); //true if op1 < op2
@@ -13,9 +11,12 @@ public class ALU {
 
 
     public void doInstruction(){
-        int opcode = getOpcode();
+        int opcode = getOpcode(); //getting the opcode as an integer value
 
-        switch (opcode) {
+        /*
+        reset result before each operation to make sure there is no carry over from other operations
+         */
+        switch (opcode) { //go through all possible opcodes
             case 0 ->{}
             case 1 ->{ //Adds source to destination, storing the result in destination
                 result = new Word32();
