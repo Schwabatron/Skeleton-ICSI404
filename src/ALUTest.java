@@ -66,4 +66,15 @@ class ALUTest {
         assertEquals(Bit.boolValues.FALSE,alu.less.getValue());
         assertEquals(Bit.boolValues.TRUE,alu.equal.getValue());
     }
+
+    @Test
+    void testValidOpcodes() {
+        ALU alu = new ALU();
+
+        for (int opcode = 0; opcode <= 20; opcode++) { // Test only valid opcodes (0–20)
+            setOpcode(alu, opcode);
+            int extractedOpcode = alu.getOpcode();
+            assertEquals(opcode, extractedOpcode, "Opcode extraction failed for opcode: " + opcode);
+        }
+    }
 }
