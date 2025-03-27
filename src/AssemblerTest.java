@@ -16,7 +16,10 @@ class AssemblerTest {
             {"leftshift 2 r6","fftfftffftfffttf"},
             {"or -6 r9","ffttftttftfftfft"},
             {"rightshift 0 r2","ffttttfffffffftf"},
-            {"call 2047","ftfftttttttttttt"},
+            {"call 1010","ftfftfttttttfftf"},
+            {"call 543","ftfftftffffttttt"},
+            {"call -1023","ftffttffffffffft"},
+            {"call -824","ftffttffttfftfff"},
             {"compare r18 r29","ftfttftfftftttft"},
             {"ble -100","fttffttttfftttff"},
             {"blt 100","fttftffffttfftff"},
@@ -35,16 +38,22 @@ class AssemblerTest {
     @Test
     void assemble() {
         var myFirstProgram = new String[] {
-            "add r1 r2",
-            "syscall 100",
-            "return",
-            "subtract 10 r4"
+                "add r1 r2",
+                "syscall 100",
+                "return",
+                "subtract 10 r4",
+                "halt"
         };
         var response = Assembler.assemble(myFirstProgram);
         assertEquals("fffftffffftffftf",response[0]);
         assertEquals("ftfffffffttfftff",response[1]);
         assertEquals("ftftffffffffffff",response[2]);
         assertEquals("fftfttftftffftff",response[3]);
+        assertEquals("ffffffffffffffff",response[4]);
+        var final_output = Assembler.finalOutput(response); //Testing finaloutput function
+        assertEquals("fffftffffftffftfftfffffffttfftff",final_output[0]);
+        assertEquals("ftftfffffffffffffftfttftftffftff",final_output[1]);
+        assertEquals("ffffffffffffffffffffffffffffffff",final_output[2]);
     }
     @Test
     void testInstructions() {
