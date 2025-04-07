@@ -7,13 +7,22 @@ public class Processor {
     private Memory mem;
     public List<String> output = new LinkedList<>();
 
+    private ALU alu;
+
     private int PC; //program counter
+
 
     private Word16 current_instruction;
 
-    private boolean fetch_flag;
 
-    private int address;
+    private boolean halt_found;
+
+
+
+    private Word32 op1;
+    private Word32 op2;
+
+    Bit instruction_cycle;
 
 
 
@@ -23,8 +32,11 @@ public class Processor {
         mem = m;
         PC = 0;
         current_instruction = new Word16();
-        fetch_flag = false;
-        address = 0;
+        halt_found = false;
+        instruction_cycle = new Bit(false);
+        op1 = new Word32();
+        op2 = new Word32();
+        alu = new ALU();
     }
 
     public void run() {
@@ -33,6 +45,9 @@ public class Processor {
             decode();
             execute();
             store();
+            if(halt_found) {
+                break;
+            }
             //TODO: add in logic that checks for a "halt" to run if found then break
         }
 
@@ -40,27 +55,39 @@ public class Processor {
 
     private void fetch() { //only read every 2 fetch calls
 
-        if(PC % 2 == 0)
+        if(instruction_cycle.getValue() == Bit.boolValues.FALSE)
         {
 
             mem.read();
-            if(PC != 0)
-            {
-                PC++;
-            }
-            fromInt(PC, mem.address);
             mem.value.getTopHalf(current_instruction);
+
 
 
         }
         else
         {
-            PC++;
             mem.value.getBottomHalf(current_instruction);
+            PC++;
         }
+        instruction_cycle.not(instruction_cycle);
     }
 
     private void decode() {
+        //check between call return and 2r/immediate
+        int opcode = getOpcode();
+        //
+
+
+        switch (opcode) {
+            case 1, 2, 3, 4, 5, 6, 7, 11, 19, 20 -> { //ALU methods
+
+            }
+            case 0,10, 12, 13, 14, 15, 16, 17, 18 -> {
+
+            }
+
+        }
+
     }
 
     private void execute() {
@@ -92,15 +119,26 @@ public class Processor {
     }
 
 
-    private void fromInt(int value, Word32 result) {
-        for(int i = 31; i >= 0; i--)
-        {
-            boolean Bit_val = (value & 1) == 1; //Determining the least significant bit of the int (ex 13 (1101) will isolate 1). this can then be checked
+    public int getOpcode() { //converting the opcode to int
+        int opcode_as_int = 0;
+        int pow = 0;
 
-            result.setBitN(i, new Bit(Bit_val)); //Setting the bit in the same position as the one we are checking
+        // Iterate over the first 5 bits (bits 0 to 4) of the instruction
+        for (int i = 4; i >= 0; i--) {
+            Bit cur_bit = new Bit(false);
+            current_instruction.getBitN(i, cur_bit); // Get bit i from the instruction
 
-            value >>= 1 ; //right shift the value to "drop" the LSB. allowing us to work with the next digit (ex 13 >> 1 = 0110) now what was the second digit
-            //is the new LSB so on the next iteration we can determine the value to place in the correct position
+            if (cur_bit.getValue() == Bit.boolValues.TRUE) {
+                opcode_as_int |= (1 << pow); // Add to opcode integer using bitwise OR
+            }
+            pow++; // Increment the power for next bit
         }
+
+        if(opcode_as_int > 20 || opcode_as_int < 0){
+            throw new IllegalArgumentException("invalid instruction provided for ALU");
+        }
+
+        return opcode_as_int;
     }
+
 }

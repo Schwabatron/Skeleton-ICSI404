@@ -17,7 +17,7 @@ public class ALU {
         reset result before each operation to make sure there is no carry over from other operations
          */
         switch (opcode) { //go through all possible opcodes
-            case 0 ->{}
+            //case 0 ->{}
             case 1 ->{ //Adds source to destination, storing the result in destination
                 result = new Word32();
                 Adder.add(op1, op2, result);
@@ -48,9 +48,9 @@ public class ALU {
                 int shiftAmount = getShiftAmount(op2);
                 Shifter.RightShift(op1, shiftAmount, result);
             }
-            case 8 ->{}
-            case 9 ->{}
-            case 10 ->{}
+            //case 8 ->{}
+            //case 9 ->{}
+            //case 10 ->{}
             case 11 ->{ //Compares Source to destination, setting the status register flags
                 Word32 temp_result = new Word32();
                 Adder.subtract(op1, op2, temp_result);
@@ -70,15 +70,19 @@ public class ALU {
 
 
             }
-            case 12 ->{}
-            case 13 ->{}
-            case 14 ->{}
-            case 15 ->{}
-            case 16 ->{}
-            case 17 ->{}
-            case 18 ->{}
-            case 19 ->{}
-            case 20 ->{}
+            //case 12 ->{}
+            //case 13 ->{}
+            //case 14 ->{}
+            //case 15 ->{}
+            //case 16 ->{}
+            //case 17 ->{}
+            //case 18 ->{}
+            //case 19 ->{}
+            //case 20 ->{}
+            default ->{
+                result = new Word32();
+                Adder.add(op1, op2, result);
+            }
         }
 
     } //Do the instruction
