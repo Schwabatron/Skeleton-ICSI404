@@ -12,6 +12,13 @@ public class ProcessorTest {
     var p = runProgram(program);
     assertEquals("r0:f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,t,f,t,f,",p.output.getFirst());
     }
+    @Test
+    public void testhalt() {
+        String[] program = {
+                "halt"
+        } ;
+        var p = runProgram(program);
+    }
 
     @Test
     public void testFibonacci() {
