@@ -49,10 +49,13 @@ public class Processor {
     public void run() {
         while (true) { //loops through fetch decode execute store
             PCmodified = false;
+            op1 = new Word32();
+            op2 = new Word32();
             fetch();
             decode();
             execute();
             store();
+            setAddress();
             if(halt_found) {
                 break;
             }
@@ -63,12 +66,8 @@ public class Processor {
     private void fetch() { //only read every 2 fetch calls
         if(instruction_cycle.getValue() == Bit.boolValues.TRUE)
         {
-
             mem.read();
             mem.value.getTopHalf(current_instruction);
-
-
-
         }
         else
         {
@@ -80,12 +79,22 @@ public class Processor {
     private void decode() { //get everything ready
         //check between call return and 2r/immediate
         current_opcode = getOpcode();
+        System.out.println("Opcode: " + current_opcode);
         if(call_return_opcodes.contains(current_opcode)) {
             for(int i = 15; i >= 5; i--)
             {
                 Bit temp = new Bit(true);
                 current_instruction.getBitN(i, temp);
                 op1.setBitN(i+16, temp);
+            }
+
+            Bit signBit = new Bit(false);
+            current_instruction.getBitN(5, signBit);
+
+            if (signBit.getValue() == Bit.boolValues.TRUE) {
+                for (int i = 0; i < 21; i++) {
+                    op1.setBitN(i, new Bit(true)); // Sign-extend with 1s
+                }
             }
         }
         else
@@ -100,6 +109,17 @@ public class Processor {
                     current_instruction.getBitN(i, temp);
                     op2.setBitN(i+21, temp);
                 }
+
+                Bit sign = new Bit(false);
+                current_instruction.getBitN(6, sign);
+
+                if (sign.getValue() == Bit.boolValues.TRUE) {
+                    for (int i = 0; i < 27; i++) {
+                        op2.setBitN(i, sign);  // fill lower bits with 1s
+                    }
+                }
+
+
                 int reg_index = getRegister2();
 
                 registers[reg_index].copy(op1); //getting the value in the second register
@@ -132,7 +152,10 @@ public class Processor {
     private void execute() {
 
         switch(current_opcode) {
-            case 1, 2, 3, 4, 5, 6, 7, 11 -> { //if its an opcode that is handed in the alu then just call the alu method doinstruction
+            case 1, 2, 3, 4, 5, 6, 7 -> { //if its an opcode that is handed in the alu then just call the alu method doinstruction
+                alu.doInstruction();
+            }
+            case 11 -> { //compare
                 alu.doInstruction();
             }
             case 8 ->{ //Syscall: switched to kernel and called kernel function 0 -> print registers, 1 -> print memory
@@ -158,6 +181,7 @@ public class Processor {
             case 10 -> { //Return: pops from the stack and sets the popped value
                 PC = callStack.pop();
                 PCmodified = true;
+                instruction_cycle.not(instruction_cycle);
             }
             case 12 -> { //BLE: if status less or equal are set then set PC to PC + immediate
                 if(alu.equal.getValue() == Bit.boolValues.TRUE || alu.less.getValue() == Bit.boolValues.TRUE)
@@ -217,18 +241,18 @@ public class Processor {
             output.add(line);
             System.out.println(line);
         }
-        System.out.println("done printing reg");
     }
 
     private void printMem() { //syscall 1
         for (int i = 0; i < 1000; i++) {
-            Word32 addr = new Word32();
+            //Word32 addr = new Word32();
             Word32 value = new Word32();
+            Word32 i_addr = bit_string(i);
             // Convert i to Word32 here...
-            addr.copy(mem.address);
+            i_addr.copy(mem.address);
             mem.read();
             mem.value.copy(value);
-            var line = i + ":" + value + "(" + TestConverter.toInt(value) + ")";
+            var line = i + ":" + value; //+ "(" + TestConverter.toInt(value) + ")";
             output.add(line);
             System.out.println(line);
         }
@@ -241,14 +265,51 @@ public class Processor {
                 int destination = getRegister2();
                 alu.result.copy(registers[destination]);
             }
+            case 18 -> { //Load 2R/immediate **need to add things to handle negatives
+                Bit temp = new Bit(false);
+                current_instruction.getBitN(5, temp);
+                if(temp.getValue() == Bit.boolValues.TRUE) //immediate
+                {
+                    Word32 backup = new Word32();
+                    mem.value.copy(backup);
+                    Word32 addr = new Word32();
+                    Adder.add(op1, op2, addr);
+                    addr.copy(mem.address); //setting the memory address to immediate + the register value
+                    mem.read();
+                    mem.value.copy(op1);
+                    int destination = getRegister2();
+                    op1.copy(registers[destination]);
+                    backup.copy(mem.value); //setting value back
+                }
+                else //2R
+                {
+                    op2.copy(mem.address);
+                    mem.read();
+                    mem.value.copy(op1);
+                    int destination = getRegister2();
+                    op1.copy(registers[destination]);
+                }
+            }
+            case 19 -> { //store 2R/immediate
+                Word32 backup = new Word32();
+                mem.value.copy(backup);
+                op1.copy(mem.address);
+                op2.copy(mem.value);
+                mem.write();
+                backup.copy(mem.value);
+            }
+            case 20 -> { //Copy 2R/immediate
+                op2.copy(op1);
+                int destination = getRegister2();
+                op1.copy(registers[destination]);
+            }
+
         }
 
-        if(!PCmodified)
+        if(!PCmodified && instruction_cycle.getValue() == Bit.boolValues.TRUE)
         {
             PC++;
         }
-
-        setAddress();
     }
 
 
@@ -313,6 +374,7 @@ public class Processor {
 
     private int getImmediate()
     {
+        /*
         int pow = 0;
         int immediate = 0;
 
@@ -323,6 +385,29 @@ public class Processor {
                 immediate |= (1 << pow);
             }
             pow++;
+        }
+
+        return immediate;
+
+         */
+
+        int immediate = 0;
+
+        // Extract the 11-bit immediate (bits 15 down to 5)
+        for (int i = 15; i >= 5; i--) {
+            Bit cur_bit = new Bit(false);
+            current_instruction.getBitN(i, cur_bit);
+            if (cur_bit.getValue() == Bit.boolValues.TRUE) {
+                immediate |= (1 << (15 - i));  // Flip indexing so LSB of immediate is at bit 0
+            }
+        }
+
+
+        Bit signBit = new Bit(false);
+        current_instruction.getBitN(5, signBit);
+        if (signBit.getValue() == Bit.boolValues.TRUE) {
+            // If negative, sign-extend to 32 bits
+            immediate |= -(1 << 11); // Fill the upper bits with 1s
         }
 
         return immediate;
