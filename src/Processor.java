@@ -374,31 +374,14 @@ public class Processor {
 
     private int getImmediate()
     {
-        /*
-        int pow = 0;
+
         int immediate = 0;
 
         for (int i = 15; i >= 5; i--) {
             Bit cur_bit = new Bit(false);
             current_instruction.getBitN(i, cur_bit);
             if (cur_bit.getValue() == Bit.boolValues.TRUE) {
-                immediate |= (1 << pow);
-            }
-            pow++;
-        }
-
-        return immediate;
-
-         */
-
-        int immediate = 0;
-
-        // Extract the 11-bit immediate (bits 15 down to 5)
-        for (int i = 15; i >= 5; i--) {
-            Bit cur_bit = new Bit(false);
-            current_instruction.getBitN(i, cur_bit);
-            if (cur_bit.getValue() == Bit.boolValues.TRUE) {
-                immediate |= (1 << (15 - i));  // Flip indexing so LSB of immediate is at bit 0
+                immediate |= (1 << (15 - i));
             }
         }
 
@@ -407,7 +390,7 @@ public class Processor {
         current_instruction.getBitN(5, signBit);
         if (signBit.getValue() == Bit.boolValues.TRUE) {
             // If negative, sign-extend to 32 bits
-            immediate |= -(1 << 11); // Fill the upper bits with 1s
+            immediate |= -(1 << 11);
         }
 
         return immediate;
