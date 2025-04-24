@@ -26,6 +26,9 @@ public class Processor {
     private int current_opcode;
     private boolean PCmodified;
 
+    private InstructionCache cache;
+    private L2Cache l2cache;
+
 
     public Processor(Memory m) {
         mem = m; //memory
@@ -53,6 +56,8 @@ public class Processor {
             add(17);
         }}; //hashset for call_return opcodes
         PCmodified = false;
+        l2cache = new L2Cache();
+        cache = new InstructionCache(l2cache);
     }
 
     public void run() {
