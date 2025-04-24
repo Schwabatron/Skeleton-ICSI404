@@ -2,6 +2,15 @@ import java.util.*;
 
 public class Processor {
 
+    //cache:
+    /*
+    300 cycles whenever you access memory
+    10 cycles for multiplication
+    2 cycles for addition/subtraction and all other alu functions
+     */
+
+    public int cur_clock_cycle = 0; //current clock cycle to keep track of how many clock cycles are done for each instruction
+
     private Set<Integer> call_return_opcodes;
     private Memory mem;
     public List<String> output = new LinkedList<>();
@@ -66,7 +75,7 @@ public class Processor {
     private void fetch() { //only read every 2 fetch calls
         if(instruction_cycle.getValue() == Bit.boolValues.TRUE)
         {
-            mem.read();
+            mem.read(); cur_clock_cycle += 300; //memory access
             mem.value.getTopHalf(current_instruction);
         }
         else
@@ -152,11 +161,15 @@ public class Processor {
     private void execute() {
 
         switch(current_opcode) {
-            case 1, 2, 3, 4, 5, 6, 7 -> { //if its an opcode that is handed in the alu then just call the alu method doinstruction
-                alu.doInstruction();
+            case 1, 2, 4, 5, 6, 7 -> { //if its an opcode that is handed in the alu then just call the alu method doinstruction
+                alu.doInstruction(); cur_clock_cycle += 2; //alu general instruction
+            }
+            case 3 ->
+            {
+                alu.doInstruction(); cur_clock_cycle += 10; //multiplication
             }
             case 11 -> { //compare
-                alu.doInstruction();
+                alu.doInstruction(); cur_clock_cycle += 2; //alu general instruction
             }
             case 8 ->{ //Syscall: switched to kernel and called kernel function 0 -> print registers, 1 -> print memory
                 int immediate = getImmediate(); //gets the immediate
@@ -250,7 +263,7 @@ public class Processor {
             Word32 i_addr = bit_string(i);
             // Convert i to Word32 here...
             i_addr.copy(mem.address);
-            mem.read();
+            mem.read(); cur_clock_cycle += 300; //memory access
             mem.value.copy(value);
             var line = i + ":" + value; //+ "(" + TestConverter.toInt(value) + ")";
             output.add(line);
@@ -275,7 +288,7 @@ public class Processor {
                     Word32 addr = new Word32();
                     Adder.add(op1, op2, addr);
                     addr.copy(mem.address); //setting the memory address to immediate + the register value
-                    mem.read();
+                    mem.read(); cur_clock_cycle += 300; //memory access
                     mem.value.copy(op1);
                     int destination = getRegister2();
                     op1.copy(registers[destination]);
@@ -283,11 +296,14 @@ public class Processor {
                 }
                 else //2R
                 {
+                    Word32 backup = new Word32();
+                    mem.value.copy(backup);
                     op2.copy(mem.address);
-                    mem.read();
+                    mem.read(); cur_clock_cycle += 300; //memory access
                     mem.value.copy(op1);
                     int destination = getRegister2();
                     op1.copy(registers[destination]);
+                    backup.copy(mem.value); //setting value back
                 }
             }
             case 19 -> { //store 2R/immediate
@@ -295,7 +311,7 @@ public class Processor {
                 mem.value.copy(backup);
                 op1.copy(mem.address);
                 op2.copy(mem.value);
-                mem.write();
+                mem.write(); cur_clock_cycle += 300; //memory access
                 backup.copy(mem.value);
             }
             case 20 -> { //Copy 2R/immediate
