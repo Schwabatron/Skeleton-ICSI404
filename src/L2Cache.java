@@ -11,8 +11,8 @@ public class L2Cache {
 
     Word32 one = new Word32();
 
-    public L2Cache() {
-        mem = new Memory();
+    public L2Cache(Memory mem) {
+        this.mem = mem;
 
         for(int i = 0; i < cache.length; i++) //initializing
         {
@@ -38,15 +38,16 @@ public class L2Cache {
         int address_int = addressAsInt(address);
 
         int starting = address_int - (address_int % 8);
-
-
-        for(int i = 0; i < addr.length; i++)
+        if(address_int != 0)
         {
-            int first_cache_addr = addressAsInt(addr[i]);
-            if(first_cache_addr == starting)
+            for(int i = 0; i < addr.length; i++)
             {
-                found = true;
-                return cache[i][address_int - starting]; //returning the correct address from the l2cache
+                int first_cache_addr = addressAsInt(addr[i]);
+                if(first_cache_addr == starting)
+                {
+                    found = true;
+                    return cache[i][address_int - starting]; //returning the correct address from the l2cache
+                }
             }
         }
 
@@ -70,7 +71,7 @@ public class L2Cache {
                 mem.value.copy(current_instruction);
                 cache[randomNumber][i] = current_instruction;
                 Word32 next_instruction = new Word32();
-                Adder.add(current_instruction, one, next_instruction);
+                Adder.add(starting_as_binary, one, next_instruction);
                 next_instruction.copy(mem.address); //setting the new address
             }
 
@@ -81,10 +82,16 @@ public class L2Cache {
     }
 
 
-    public Word32 Write(Word32 address, Word32 value)
-    {
-        //somehow need to get this to interact with main memory
-        return new Word32();
+    public void Write(Word32 address, Word32 value) {
+        int addr = addressAsInt(address);
+        for(int i = 0; i < 32; i++)
+        {
+            Bit temp = new Bit(false);
+            value.getBitN(i, temp);
+            address.copy(mem.address);
+            value.copy(mem.value);
+            mem.write();
+        }
     }
 
 

@@ -92,7 +92,7 @@ public class Test_Cycles {
         };
 
         var p = runProgram(program);
-        System.out.println("the cost of running the program 20 integers is: " + p.cur_clock_cycle);
+        System.out.println("the cost of running the program 20 integers in reverse is: " + p.cur_clock_cycle);
         // Optional: Assert specific register/memory state
         // Example: assertEquals("r2:210", p.output.get(X)); // if 1+2+...+20 is in memory
     }

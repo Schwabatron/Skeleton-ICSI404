@@ -7,14 +7,17 @@ public class InstructionCache {
 
     public int clock = 0;
 
+    Memory mem;
+
 
     //pass l2 cache as a parameter
-    public InstructionCache(L2Cache l2cache) {
+    public InstructionCache(L2Cache l2cache, Memory mem) {
         for(int i = 0; i < 8; i++) { //initialize the cache
             cache[i] = new Word32();
         }
+        this.mem = mem;
 
-        this.l2cache = new L2Cache(); //init l2cache
+        this.l2cache = new L2Cache(mem); //init l2cache
 
         addr = new Word32();
     }
@@ -25,7 +28,7 @@ public class InstructionCache {
         int addr_int = addressAsInt(address); //getting the starting address as
 
 
-        if(addr_int >= starting_addr && addr_int < (starting_addr + 8)) //if the requested address is between the starting address and the end of the array
+        if(addr_int >= starting_addr && addr_int < (starting_addr + 8) && addr_int != 0) //if the requested address is between the starting address and the end of the array
         {
             clock += 10;
             return cache[addr_int - starting_addr]; //returning the value held at the index addr_int - starting_addr
@@ -34,6 +37,18 @@ public class InstructionCache {
         }else{
             clock += 50;
             Word32 retval = l2cache.Read(address); //passing the addr now to l2cache
+            for(int i = 0; i < 4; i++)
+            {
+                if(addr.equals(l2cache.addr[i]))
+                {
+                    l2cache.addr[i].copy(addr);
+                    for(int j = 0; j < 8; j++)
+                    {
+                        l2cache.cache[i][j].copy(cache[j]);
+                    }
+                }
+            }
+            clock += l2cache.clock;
             return retval;
         }
     }

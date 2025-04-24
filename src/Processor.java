@@ -29,8 +29,11 @@ public class Processor {
     private InstructionCache cache;
     private L2Cache l2cache;
 
+    Word32 current_instruction_set;
+
 
     public Processor(Memory m) {
+        current_instruction_set = new Word32();
         mem = m; //memory
         PC = 0; //PC
         current_instruction = new Word16(); //the current instruction were working with
@@ -56,8 +59,8 @@ public class Processor {
             add(17);
         }}; //hashset for call_return opcodes
         PCmodified = false;
-        l2cache = new L2Cache();
-        cache = new InstructionCache(l2cache);
+        l2cache = new L2Cache(mem);
+        cache = new InstructionCache(l2cache, mem);
     }
 
     public void run() {
@@ -80,12 +83,15 @@ public class Processor {
     private void fetch() { //only read every 2 fetch calls
         if(instruction_cycle.getValue() == Bit.boolValues.TRUE)
         {
-            mem.read(); cur_clock_cycle += 300; //memory access
-            mem.value.getTopHalf(current_instruction);
+            Word32 pc_as_word32 = new Word32();
+            TestConverter.fromInt(PC, pc_as_word32);
+            current_instruction_set = cache.Read(pc_as_word32);
+            cur_clock_cycle += cache.clock;//memory access
+            current_instruction_set.getTopHalf(current_instruction);
         }
         else
         {
-            mem.value.getBottomHalf(current_instruction);
+            current_instruction_set.getBottomHalf(current_instruction);
         }
         instruction_cycle.not(instruction_cycle);
     }
