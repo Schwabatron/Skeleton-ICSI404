@@ -16,6 +16,10 @@ public class Processor {
     private Stack<Integer> callStack;
     private int current_opcode;
     private boolean PCmodified;
+    public int clock_cycle;
+    InstructionCache cache;
+    L2Cache l2cache;
+
 
 
     public Processor(Memory m) {
@@ -44,6 +48,9 @@ public class Processor {
             add(17);
         }}; //hashset for call_return opcodes
         PCmodified = false;
+        clock_cycle = 0;
+        l2cache = new L2Cache(mem);
+        cache = new InstructionCache(l2cache);
     }
 
     public void run() {
