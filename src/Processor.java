@@ -58,7 +58,6 @@ public class Processor {
         }
         else {
             mem.value.getBottomHalf(Current_Instruction); //Copying the second instruction into current instruction
-            System.out.println(Current_Instruction.toString());
         }
         Instruction_Read_Cycle = !Instruction_Read_Cycle; //Flipping the Instruction read cycle flag to prevent reading every cycle 
     }
@@ -96,11 +95,7 @@ public class Processor {
                 Program_Counter.copy(Pushed_address);
                 Pushed_address.Increment();
                 Call_Stack.push(Pushed_address); //Add the program counter + 1 to the call stack
-                System.out.println("current instruction: " + Current_Instruction.toString());
-                System.out.println("old program counter: " + TestConverter.toInt(Program_Counter));
-                System.out.println("op2: " + TestConverter.toInt(Op2));
                 Adder.add(Program_Counter, Op2, Program_Counter); //Set program counter equal to PC + immediate
-                System.out.println("new program counter: " + TestConverter.toInt(Program_Counter));
             }
             case 10 -> { //Return
                 Call_Stack.pop().copy(Program_Counter); //set the program counter to the popped value
