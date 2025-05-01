@@ -21,6 +21,25 @@ public class ProcessorTest {
     }
 
     @Test
+    public void multiplication_test()
+    {
+        Word32 test = new Word32();
+        test.Increment();
+        test.Increment();
+        Word32 Result = new Word32();
+        Result.Increment();
+        Result.Increment();
+        Result.Increment();
+        Result.Increment();
+        Result.Increment();
+        Word32 Product = new Word32();
+        Multiplier.multiply(test, Result, Product);
+        System.out.println("0 x 5 = " + TestConverter.toInt(Product));
+
+    }
+
+
+    @Test
     public void testFibonacci() {
         String[] program = {
                 "copy 10 r9", // address  -- 0

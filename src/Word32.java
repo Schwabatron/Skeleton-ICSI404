@@ -108,6 +108,15 @@ public class Word32 {
         }
     }
 
+    //Increment function for word32
+    public void Increment() {
+        Word32 temp = new Word32();
+        Word32 one = new Word32();
+        one.setBitN(31, new Bit(true));
+        this.copy(temp); //temp now holds the value of this
+        Adder.add(temp, one, this);
+    }
+
     //ToString method for the Word32 class
     public String toString() {
         StringBuilder sb = new StringBuilder();

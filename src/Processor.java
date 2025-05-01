@@ -25,6 +25,12 @@ public class Processor {
 
     private ALU alu = new ALU();
 
+    InstructionCache l1cache;
+
+    L2Cache l2cache;
+
+    Word32 full_instruction = new Word32();
+
 
 
     public Processor(Memory m) {
@@ -33,6 +39,9 @@ public class Processor {
         for(int i = 0; i < Registers.length; i++) { //Initialize the registers
             Registers[i] = new Word32();
         }
+
+        l2cache = new L2Cache(mem);
+        l1cache = new InstructionCache(l2cache);
     }
 
     public void run() {
@@ -53,11 +62,15 @@ public class Processor {
 
     private void fetch() {
         if(Instruction_Read_Cycle) {
-            mem.read(); //Reading from memory
-            mem.value.getTopHalf(Current_Instruction); //Copying the first instruction into the current instruction
+            l1cache.Read(Program_Counter).copy(full_instruction);
+            full_instruction.getTopHalf(Current_Instruction);
+
+            //mem.read(); //Reading from memory
+            //mem.value.getTopHalf(Current_Instruction); //Copying the first instruction into the current instruction
         }
         else {
-            mem.value.getBottomHalf(Current_Instruction); //Copying the second instruction into current instruction
+            //mem.value.getBottomHalf(Current_Instruction); //Copying the second instruction into current instruction
+            full_instruction.getBottomHalf(Current_Instruction);
         }
         Instruction_Read_Cycle = !Instruction_Read_Cycle; //Flipping the Instruction read cycle flag to prevent reading every cycle
     }

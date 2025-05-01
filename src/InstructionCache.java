@@ -6,29 +6,49 @@ public class InstructionCache {
 
     Word32 Starting_Address;
 
+    Word32 Cache_factor = new Word32();
+
+    Boolean first_read = true;
+
     public InstructionCache(L2Cache l2cache) {
         this.l2cache = l2cache; //initializing l2cache
         for(int i = 0; i < instructions.length; i++) {instructions[i] = new Word32();} //Initializing instruction cache
         Starting_Address = new Word32(); //initializing the starting address
+
+        Cache_factor.setBitN(28, new Bit(true)); //making a cache factor(8) since requested cache block * 8 will be the new starting address for the cache after a fill
     }
 
     public Word32 Read(Word32 Requested_Address)
     {
+
         Word32 Cache_Block_Requested = new Word32();
         Word32 Cache_Block = new Word32();
         Shifter.RightShift(Requested_Address, 3, Cache_Block_Requested); //getting the requested cache block level
         Shifter.RightShift(Starting_Address, 3, Cache_Block); //getting the actual cache block level
+        int index = getOffset(Requested_Address); //getting the index of the requested address within the cache
+
+        if(first_read)
+        {
+            Word32[] Read_from_l2cache = l2cache.Read(Requested_Address); //getting the array of words from the l2Cache
+            fill_cache(Read_from_l2cache);
+            Word32 new_starting_address = new Word32();
+            Shifter.LeftShift(Cache_Block_Requested, 3, new_starting_address);
+            new_starting_address.copy(Starting_Address); //assigning the new starting address after a fill
+            first_read = false;
+            return instructions[index];
+        }
 
         if(Cache_Block.equals(Cache_Block_Requested)) //comparing to see if the requested address is being held in this cache block
         {
-            int index = getOffset(Requested_Address); //getting the index of the requested address within the cache
             return instructions[index]; // return the requested instruction
         }
         else
         {
             Word32[] Read_from_l2cache = l2cache.Read(Requested_Address); //getting the array of words from the l2Cache
             fill_cache(Read_from_l2cache);
-            int index = getOffset(Requested_Address);
+            Word32 new_starting_address = new Word32();
+            Shifter.LeftShift(Cache_Block_Requested, 3, new_starting_address);
+            new_starting_address.copy(Starting_Address); //assigning the new starting address after a fill
             return instructions[index];
         }
     }
