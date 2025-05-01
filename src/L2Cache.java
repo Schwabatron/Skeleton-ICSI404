@@ -6,10 +6,9 @@ public class L2Cache {
     Word32 l2cache[][] = new Word32[4][8]; //4 size 8 caches
 
     Word32 Starting_addresses[] = new Word32[4];
-
-    Random random = new Random();
-
     Boolean first_read = true;
+    int current_cache_index = 0;
+
 
     public L2Cache(Memory memory) {
         this.mem = memory;
@@ -37,7 +36,8 @@ public class L2Cache {
 
         if(first_read)
         {
-            int Cache_to_fill = random.nextInt(4);
+            int Cache_to_fill = current_cache_index;
+            current_cache_index = (current_cache_index + 1) % 4;
             Word32 new_Starting_address = new Word32();
             Shifter.LeftShift(Cache_block_requested, 3, new_Starting_address);
             fill_cache(Cache_to_fill, new_Starting_address); //passing it the index of the cache i want to fill and the new starting address for when i read from memory
@@ -55,7 +55,8 @@ public class L2Cache {
         }
 
         //fill one of the cache blocks from main memory with 8 mem addresses and return it
-        int Cache_to_fill = random.nextInt(4);
+        int Cache_to_fill = current_cache_index;
+        current_cache_index = (current_cache_index + 1) % 4;
         Word32 new_Starting_address = new Word32();
         Shifter.LeftShift(Cache_block_requested, 3, new_Starting_address);
         fill_cache(Cache_to_fill, new_Starting_address); //passing it the index of the cache i want to fill and the new starting address for when i read from memory
@@ -83,7 +84,8 @@ public class L2Cache {
         if(!found)
         {
             //if it could not find the cache we need to load the block into l2cache from memory and then write to the correct address
-            int Cache_to_fill = random.nextInt(4);
+            int Cache_to_fill = current_cache_index;
+            current_cache_index = (current_cache_index + 1) % 4;
             Word32 new_Starting_address = new Word32();
             Shifter.LeftShift(Cache_block_requested, 3, new_Starting_address);
             fill_cache(Cache_to_fill, new_Starting_address); //passing it the index of the cache i want to fill and the new starting address for when i read from memory
@@ -99,6 +101,10 @@ public class L2Cache {
 
 
     private void fill_cache(int index, Word32 Starting_address) {
+        Word32 mem_addr_backup = new Word32();
+        Word32 mem_value_backup = new Word32();
+        mem.address.copy(mem_addr_backup);
+        mem.value.copy(mem_value_backup);
         Starting_address.copy(Starting_addresses[index]); //setting the new starting index for this cache
         Starting_address.copy(mem.address); //setting the pointer in memory to the correct starting address
         for(int i = 0; i < l2cache[0].length; i++) //loop through the cache and fill 8 values
@@ -107,6 +113,8 @@ public class L2Cache {
             mem.value.copy(l2cache[index][i]); //inserting the value read from memory into the l2cache at index
             mem.address.Increment(); //increment the memory address
         }
+        mem_addr_backup.copy(mem.address);
+        mem_value_backup.copy(mem.value);
     }
 
     private int getOffset(Word32 Requested_Address) {

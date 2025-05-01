@@ -31,6 +31,8 @@ public class Processor {
 
     Word32 full_instruction = new Word32();
 
+    public int clock_cycle = 0;
+
 
 
     public Processor(Memory m) {
@@ -161,25 +163,28 @@ public class Processor {
                 Word32 Value_copy = new Word32();
                 mem.value.copy(Value_copy);
                 if(is2R()) {
-                    Op2.copy(mem.address); //setting the mem address to the value held in the source register
-                    mem.read();
-                    mem.value.copy(Registers[Destination]);
+                    //Op2.copy(mem.address); //setting the mem address to the value held in the source register
+                    //mem.read();
+                    //mem.value.copy(Registers[Destination]);
+                    l1cache.Read(Op2).copy(Registers[Destination]);
                 }
                 else {
                     Word32 address = new Word32();
                     Adder.add(Op1, Op2, address);
-                    address.copy(mem.address);
-                    mem.read();
-                    mem.value.copy(Registers[Destination]);
+                    //address.copy(mem.address);
+                    //mem.read();
+                    //mem.value.copy(Registers[Destination]);
+                    l1cache.Read(address).copy(Registers[Destination]);
                 }
                 Value_copy.copy(mem.value);
             }
             case 19 -> {
                 Word32 Value_copy = new Word32();
                 mem.value.copy(Value_copy);
-                Op2.copy(mem.value);
-                Op1.copy(mem.address);
-                mem.write();
+                //Op2.copy(mem.value);
+                //Op1.copy(mem.address);
+                //mem.write();
+                l2cache.Write(Op1, Op2);
                 Value_copy.copy(mem.value);
             }
             case 20 -> {
