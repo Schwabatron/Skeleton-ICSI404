@@ -9,8 +9,10 @@ public class L2Cache {
     Boolean first_read = true;
     int current_cache_index = 0;
 
+    Processor p;
 
-    public L2Cache(Memory memory) {
+
+    public L2Cache(Memory memory, Processor p) {
         this.mem = memory;
 
         for(int i = 0; i < l2cache.length; i++) //initialization for the l2cache
@@ -25,6 +27,8 @@ public class L2Cache {
         {
             Starting_addresses[i] = new Word32();
         }
+
+        this.p = p;
     }
 
 
@@ -36,6 +40,7 @@ public class L2Cache {
 
         if(first_read)
         {
+            p.clock_cycle += 350;
             int Cache_to_fill = current_cache_index;
             current_cache_index = (current_cache_index + 1) % 4;
             Word32 new_Starting_address = new Word32();
@@ -49,12 +54,14 @@ public class L2Cache {
                 Shifter.RightShift(Starting_addresses[i], 3, Cache_block); //getting the actual cache block level for each entry
                 if(Cache_block.equals(Cache_block_requested)) //if they match
                 {
+                    p.clock_cycle += 50;
                     return l2cache[i]; //return the l2cache level with the matching index
                 }
                 Cache_block = new Word32();
         }
 
         //fill one of the cache blocks from main memory with 8 mem addresses and return it
+        p.clock_cycle += 350;
         int Cache_to_fill = current_cache_index;
         current_cache_index = (current_cache_index + 1) % 4;
         Word32 new_Starting_address = new Word32();
@@ -65,6 +72,7 @@ public class L2Cache {
 
     public void Write(Word32 Address, Word32 Value)
     {
+        p.clock_cycle += 50;
         Boolean found = false;
         Word32 Cache_block_requested = new Word32();
         Word32 Cache_block = new Word32();

@@ -42,8 +42,8 @@ public class Processor {
             Registers[i] = new Word32();
         }
 
-        l2cache = new L2Cache(mem);
-        l1cache = new InstructionCache(l2cache);
+        l2cache = new L2Cache(mem, this);
+        l1cache = new InstructionCache(l2cache, this);
     }
 
     public void run() {

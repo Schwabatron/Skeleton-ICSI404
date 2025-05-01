@@ -10,12 +10,16 @@ public class InstructionCache {
 
     Boolean first_read = true;
 
-    public InstructionCache(L2Cache l2cache) {
+    Processor p;
+
+    public InstructionCache(L2Cache l2cache, Processor p) {
         this.l2cache = l2cache; //initializing l2cache
         for(int i = 0; i < instructions.length; i++) {instructions[i] = new Word32();} //Initializing instruction cache
         Starting_Address = new Word32(); //initializing the starting address
 
         Cache_factor.setBitN(28, new Bit(true)); //making a cache factor(8) since requested cache block * 8 will be the new starting address for the cache after a fill
+
+        this.p = p;
     }
 
     public Word32 Read(Word32 Requested_Address)
@@ -40,6 +44,7 @@ public class InstructionCache {
 
         if(Cache_Block.equals(Cache_Block_Requested)) //comparing to see if the requested address is being held in this cache block
         {
+            p.clock_cycle += 10;
             return instructions[index]; // return the requested instruction
         }
         else
